@@ -24,7 +24,7 @@ export interface ServerRequest extends IncomingMessage {
  * @param {Object} [options]
  * @return {Function}
  */
-export function cookieParser(secret: string | string[], options: cookie.ICookieParseOptions) {
+export function cookieParser(secret: string | string[], options: cookie.ICookieParseOptions = {}) {
   const secrets = !secret || Array.isArray(secret) ? secret || [] : [secret];
 
   return function cookieParser(req: ServerRequest, res: ServerResponse, next: (err?: Error) => void) {

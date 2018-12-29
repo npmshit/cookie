@@ -128,7 +128,7 @@ export interface ICookieParseOptions {
  * @param {object} [options]
  * @return {object}
  */
-export function parse(str: string, options: ICookieParseOptions) {
+export function parse(str: string, options: ICookieParseOptions = {}) {
   if (typeof str !== "string") {
     throw new TypeError("argument str must be a string");
   }
@@ -178,7 +178,7 @@ export function parse(str: string, options: ICookieParseOptions) {
  * @param {object} [options]
  * @return {string}
  */
-export function serialize(name: string, val: string, options: ICookieSerializeOptions): string {
+export function serialize(name: string, val: string, options: ICookieSerializeOptions = {}): string {
   const opt = options || {};
   const enc = opt.encode || encode;
 
