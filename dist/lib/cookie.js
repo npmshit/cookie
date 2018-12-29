@@ -116,7 +116,7 @@ function serialize(name, val, options) {
         str += "; Secure";
     }
     if (opt.sameSite) {
-        var sameSite = typeof opt.sameSite === "string" ? opt.sameSite.toLowerCase() : opt.sameSite;
+        const sameSite = typeof opt.sameSite === "string" ? opt.sameSite.toLowerCase() : opt.sameSite;
         switch (sameSite) {
             case true:
                 str += "; SameSite=Strict";

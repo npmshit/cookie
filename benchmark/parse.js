@@ -16,40 +16,37 @@ var suite = new benchmark.Suite();
 suite.add({
   name: "simple",
   minSamples: 100,
-  fn: 'var val = cookie.parse("foo=bar")'
+  fn: 'var val = cookie.parse("foo=bar")',
 });
 
 suite.add({
   name: "decode",
   minSamples: 100,
-  fn: 'var val = cookie.parse("foo=hello%20there!")'
+  fn: 'var val = cookie.parse("foo=hello%20there!")',
 });
 
 suite.add({
   name: "unquote",
   minSamples: 100,
-  fn: 'var val = cookie.parse("foo=\\"foo bar\\"")'
+  fn: 'var val = cookie.parse("foo=\\"foo bar\\"")',
 });
 
 suite.add({
   name: "duplicates",
   minSamples: 100,
-  fn:
-    "var val = cookie.parse(" +
-    JSON.stringify(gencookies(2) + "; " + gencookies(2)) +
-    ")"
+  fn: "var val = cookie.parse(" + JSON.stringify(gencookies(2) + "; " + gencookies(2)) + ")",
 });
 
 suite.add({
   name: "10 cookies",
   minSamples: 100,
-  fn: "var val = cookie.parse(" + JSON.stringify(gencookies(10)) + ")"
+  fn: "var val = cookie.parse(" + JSON.stringify(gencookies(10)) + ")",
 });
 
 suite.add({
   name: "100 cookies",
   minSamples: 100,
-  fn: "var val = cookie.parse(" + JSON.stringify(gencookies(100)) + ")"
+  fn: "var val = cookie.parse(" + JSON.stringify(gencookies(100)) + ")",
 });
 
 suite.on("start", function onCycle(event) {

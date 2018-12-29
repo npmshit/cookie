@@ -17,7 +17,7 @@ $ npm install cookie
 ## API
 
 ```js
-var cookie = require('cookie');
+const cookie = require('cookie');
 ```
 
 ### cookie.parse(str, options)
@@ -27,7 +27,7 @@ The `str` argument is the string representing a `Cookie` header value and `optio
 optional object containing additional parsing options.
 
 ```js
-var cookies = cookie.parse('foo=bar; equation=E%3Dmc%5E2');
+const cookies = cookie.parse('foo=bar; equation=E%3Dmc%5E2');
 // { foo: 'bar', equation: 'E=mc^2' }
 ```
 
@@ -54,7 +54,7 @@ name for the cookie, the `value` argument is the value to set the cookie to, and
 argument is an optional object containing additional serialization options.
 
 ```js
-var setCookie = cookie.serialize('foo', 'bar');
+const setCookie = cookie.serialize('foo', 'bar');
 // foo=bar
 ```
 
@@ -137,14 +137,14 @@ The following example uses this module in conjunction with the Node.js core HTTP
 to prompt a user for their name and display it back on future visits.
 
 ```js
-var cookie = require('cookie');
-var escapeHtml = require('escape-html');
-var http = require('http');
-var url = require('url');
+const cookie = require('cookie');
+const escapeHtml = require('escape-html');
+const http = require('http');
+const url = require('url');
 
 function onRequest(req, res) {
   // Parse the query string
-  var query = url.parse(req.url, true, true).query;
+  const query = url.parse(req.url, true, true).query;
 
   if (query && query.name) {
     // Set a new cookie with the name
@@ -161,10 +161,10 @@ function onRequest(req, res) {
   }
 
   // Parse the cookies on the request
-  var cookies = cookie.parse(req.headers.cookie || '');
+  const cookies = cookie.parse(req.headers.cookie || '');
 
   // Get the visitor name set in the cookie
-  var name = cookies.name;
+  const name = cookies.name;
 
   res.setHeader('Content-Type', 'text/html; charset=UTF-8');
 
