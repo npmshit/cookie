@@ -2,73 +2,76 @@
  * Module dependencies.
  */
 
-var benchmark = require('benchmark')
-var benchmarks = require('beautify-benchmark')
+var benchmark = require("benchmark");
+var benchmarks = require("beautify-benchmark");
 
 /**
  * Globals for benchmark.js
  */
 
-global.cookie = require('..')
+global.cookie = require("..");
 
-var suite = new benchmark.Suite()
+var suite = new benchmark.Suite();
 
 suite.add({
-  name: 'simple',
+  name: "simple",
   minSamples: 100,
   fn: 'var val = cookie.parse("foo=bar")'
-})
+});
 
 suite.add({
-  name: 'decode',
+  name: "decode",
   minSamples: 100,
   fn: 'var val = cookie.parse("foo=hello%20there!")'
-})
+});
 
 suite.add({
-  name: 'unquote',
+  name: "unquote",
   minSamples: 100,
   fn: 'var val = cookie.parse("foo=\\"foo bar\\"")'
-})
+});
 
 suite.add({
-  name: 'duplicates',
+  name: "duplicates",
   minSamples: 100,
-  fn: 'var val = cookie.parse(' + JSON.stringify(gencookies(2) + '; ' + gencookies(2)) + ')'
-})
+  fn:
+    "var val = cookie.parse(" +
+    JSON.stringify(gencookies(2) + "; " + gencookies(2)) +
+    ")"
+});
 
 suite.add({
-  name: '10 cookies',
+  name: "10 cookies",
   minSamples: 100,
-  fn: 'var val = cookie.parse(' + JSON.stringify(gencookies(10)) + ')'
-})
+  fn: "var val = cookie.parse(" + JSON.stringify(gencookies(10)) + ")"
+});
 
 suite.add({
-  name: '100 cookies',
+  name: "100 cookies",
   minSamples: 100,
-  fn: 'var val = cookie.parse(' + JSON.stringify(gencookies(100)) + ')'
-})
+  fn: "var val = cookie.parse(" + JSON.stringify(gencookies(100)) + ")"
+});
 
-suite.on('start', function onCycle (event) {
-  process.stdout.write('  cookie.parse\n\n')
-})
+suite.on("start", function onCycle(event) {
+  process.stdout.write("  cookie.parse\n\n");
+});
 
-suite.on('cycle', function onCycle (event) {
-  benchmarks.add(event.target)
-})
+suite.on("cycle", function onCycle(event) {
+  benchmarks.add(event.target);
+});
 
-suite.on('complete', function onComplete () {
-  benchmarks.log()
-})
+suite.on("complete", function onComplete() {
+  benchmarks.log();
+});
 
-suite.run({async: false})
+suite.run({ async: false });
 
-function gencookies (num) {
-  var str = ''
+function gencookies(num) {
+  var str = "";
 
   for (var i = 0; i < num; i++) {
-    str += '; foo' + i + '=bar'
+    str += "; foo" + i + "=bar";
   }
 
-  return str.substr(2)
+  return str.substr(2);
 }
