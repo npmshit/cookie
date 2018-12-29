@@ -1,8 +1,7 @@
-var assert = require("assert");
-var cookieParser = require("../src/lib/cookie-parser");
-var http = require("http");
-var request = require("supertest");
-var signature = require("../src/lib/cookie-signature");
+const assert = require("assert");
+const http = require("http");
+const request = require("supertest");
+const cookie = require("../dist/lib");
 
 describe("cookieParser()", function() {
   var server;
@@ -15,7 +14,7 @@ describe("cookieParser()", function() {
   });
 
   it("should export JSONCookies function", function() {
-    assert(typeof cookieParser.JSONCookies, "function");
+    assert(typeof cookie.JSONCookies, "function");
   });
 
   describe("when no cookies are sent", function() {
@@ -57,7 +56,7 @@ describe("cookieParser()", function() {
 
   describe("when req.cookies exists", function() {
     it("should do nothing", function(done) {
-      var _parser = cookieParser();
+      var _parser = cookie.cookieParser();
       var server = http.createServer(function(req, res) {
         req.cookies = { fizz: "buzz" };
         _parser(req, res, function(err) {
@@ -79,7 +78,7 @@ describe("cookieParser()", function() {
   });
 
   describe("when a secret is given", function() {
-    var val = signature.sign("foobarbaz", "keyboard cat");
+    var val = cookie.sign("foobarbaz", "keyboard cat");
     // TODO: "bar" fails...
 
     it("should populate req.signedCookies", function(done) {
@@ -106,11 +105,7 @@ describe("cookieParser()", function() {
           request(server)
             .get("/")
             .set("Cookie", "foo=" + val + "3")
-            .expect(
-              200,
-              '{"foo":"foobarbaz.CP7AWaXDfAKIRfH49dQzKJx7sKzzSoPq7/AcBBRVwlI3"}',
-              done
-            );
+            .expect(200, '{"foo":"foobarbaz.CP7AWaXDfAKIRfH49dQzKJx7sKzzSoPq7/AcBBRVwlI3"}', done);
         });
     });
   });
@@ -121,7 +116,7 @@ describe("cookieParser()", function() {
         .get("/signed")
         .set(
           "Cookie",
-          "buzz=s:foobar.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE; fizz=s:foobar.JTCAgiMWsnuZpN3mrYnEUjXlGxmDi4POCBnWbRxse88"
+          "buzz=s:foobar.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE; fizz=s:foobar.JTCAgiMWsnuZpN3mrYnEUjXlGxmDi4POCBnWbRxse88",
         )
         .expect(200, '{"buzz":"foobar","fizz":"foobar"}', done);
     });
@@ -141,7 +136,7 @@ describe("cookieParser()", function() {
     });
 
     it("should not populate req.signedCookies", function(done) {
-      var val = signature.sign("foobarbaz", "keyboard cat");
+      var val = cookie.sign("foobarbaz", "keyboard cat");
       request(server)
         .get("/signed")
         .set("Cookie", "foo=s:" + val)
@@ -150,180 +145,138 @@ describe("cookieParser()", function() {
   });
 });
 
-describe("cookieParser.JSONCookie(str)", function() {
+describe("cookie.JSONCookie(str)", function() {
   it("should return undefined for non-string arguments", function() {
-    assert.strictEqual(cookieParser.JSONCookie(), undefined);
-    assert.strictEqual(cookieParser.JSONCookie(undefined), undefined);
-    assert.strictEqual(cookieParser.JSONCookie(null), undefined);
-    assert.strictEqual(cookieParser.JSONCookie(42), undefined);
-    assert.strictEqual(cookieParser.JSONCookie({}), undefined);
-    assert.strictEqual(cookieParser.JSONCookie([]), undefined);
-    assert.strictEqual(cookieParser.JSONCookie(function() {}), undefined);
+    assert.strictEqual(cookie.JSONCookie(), undefined);
+    assert.strictEqual(cookie.JSONCookie(undefined), undefined);
+    assert.strictEqual(cookie.JSONCookie(null), undefined);
+    assert.strictEqual(cookie.JSONCookie(42), undefined);
+    assert.strictEqual(cookie.JSONCookie({}), undefined);
+    assert.strictEqual(cookie.JSONCookie([]), undefined);
+    assert.strictEqual(cookie.JSONCookie(function() {}), undefined);
   });
 
   it("should return undefined for non-JSON cookie string", function() {
-    assert.strictEqual(cookieParser.JSONCookie(""), undefined);
-    assert.strictEqual(cookieParser.JSONCookie("foo"), undefined);
-    assert.strictEqual(cookieParser.JSONCookie("{}"), undefined);
+    assert.strictEqual(cookie.JSONCookie(""), undefined);
+    assert.strictEqual(cookie.JSONCookie("foo"), undefined);
+    assert.strictEqual(cookie.JSONCookie("{}"), undefined);
   });
 
   it("should return object for JSON cookie string", function() {
-    assert.deepEqual(cookieParser.JSONCookie('j:{"foo":"bar"}'), { foo: "bar" });
+    assert.deepEqual(cookie.JSONCookie('j:{"foo":"bar"}'), { foo: "bar" });
   });
 
   it("should return undefined on invalid JSON", function() {
-    assert.strictEqual(cookieParser.JSONCookie('j:{foo:"bar"}'), undefined);
+    assert.strictEqual(cookie.JSONCookie('j:{foo:"bar"}'), undefined);
   });
 });
 
-describe("cookieParser.signedCookie(str, secret)", function() {
+describe("cookie.signedCookie(str, secret)", function() {
   it("should return undefined for non-string arguments", function() {
-    assert.strictEqual(
-      cookieParser.signedCookie(undefined, "keyboard cat"),
-      undefined
-    );
-    assert.strictEqual(
-      cookieParser.signedCookie(null, "keyboard cat"),
-      undefined
-    );
-    assert.strictEqual(
-      cookieParser.signedCookie(42, "keyboard cat"),
-      undefined
-    );
-    assert.strictEqual(
-      cookieParser.signedCookie({}, "keyboard cat"),
-      undefined
-    );
-    assert.strictEqual(
-      cookieParser.signedCookie([], "keyboard cat"),
-      undefined
-    );
-    assert.strictEqual(
-      cookieParser.signedCookie(function() {}, "keyboard cat"),
-      undefined
-    );
+    assert.strictEqual(cookie.signedCookie(undefined, "keyboard cat"), undefined);
+    assert.strictEqual(cookie.signedCookie(null, "keyboard cat"), undefined);
+    assert.strictEqual(cookie.signedCookie(42, "keyboard cat"), undefined);
+    assert.strictEqual(cookie.signedCookie({}, "keyboard cat"), undefined);
+    assert.strictEqual(cookie.signedCookie([], "keyboard cat"), undefined);
+    assert.strictEqual(cookie.signedCookie(function() {}, "keyboard cat"), undefined);
   });
 
   it("should pass through non-signed string", function() {
-    assert.strictEqual(cookieParser.signedCookie("", "keyboard cat"), "");
-    assert.strictEqual(cookieParser.signedCookie("foo", "keyboard cat"), "foo");
-    assert.strictEqual(
-      cookieParser.signedCookie("j:{}", "keyboard cat"),
-      "j:{}"
-    );
+    assert.strictEqual(cookie.signedCookie("", "keyboard cat"), "");
+    assert.strictEqual(cookie.signedCookie("foo", "keyboard cat"), "foo");
+    assert.strictEqual(cookie.signedCookie("j:{}", "keyboard cat"), "j:{}");
   });
 
   it("should return false for tampered signed string", function() {
     assert.strictEqual(
-      cookieParser.signedCookie(
-        "s:foobaz.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE",
-        "keyboard cat"
-      ),
-      false
+      cookie.signedCookie("s:foobaz.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE", "keyboard cat"),
+      false,
     );
   });
 
   it("should return unsigned value for signed string", function() {
     assert.strictEqual(
-      cookieParser.signedCookie(
-        "s:foobar.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE",
-        "keyboard cat"
-      ),
-      "foobar"
+      cookie.signedCookie("s:foobar.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE", "keyboard cat"),
+      "foobar",
     );
   });
 
   describe("when secret is an array", function() {
     it("should return false for tampered signed string", function() {
       assert.strictEqual(
-        cookieParser.signedCookie(
-          "s:foobaz.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE",
-          ["keyboard cat", "nyan cat"]
-        ),
-        false
+        cookie.signedCookie("s:foobaz.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE", ["keyboard cat", "nyan cat"]),
+        false,
       );
     });
 
     it("should return unsigned value for first secret", function() {
       assert.strictEqual(
-        cookieParser.signedCookie(
-          "s:foobar.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE",
-          ["keyboard cat", "nyan cat"]
-        ),
-        "foobar"
+        cookie.signedCookie("s:foobar.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE", ["keyboard cat", "nyan cat"]),
+        "foobar",
       );
     });
 
     it("should return unsigned value for second secret", function() {
       assert.strictEqual(
-        cookieParser.signedCookie(
-          "s:foobar.JTCAgiMWsnuZpN3mrYnEUjXlGxmDi4POCBnWbRxse88",
-          ["keyboard cat", "nyan cat"]
-        ),
-        "foobar"
+        cookie.signedCookie("s:foobar.JTCAgiMWsnuZpN3mrYnEUjXlGxmDi4POCBnWbRxse88", ["keyboard cat", "nyan cat"]),
+        "foobar",
       );
     });
   });
 });
 
-describe("cookieParser.signedCookies(obj, secret)", function() {
+describe("cookie.signedCookies(obj, secret)", function() {
   it("should ignore non-signed strings", function() {
-    assert.deepEqual(cookieParser.signedCookies({}, "keyboard cat"), {});
-    assert.deepEqual(cookieParser.signedCookies({ foo: "bar" }, "keyboard cat"), {});
+    assert.deepEqual(cookie.signedCookies({}, "keyboard cat"), {});
+    assert.deepEqual(cookie.signedCookies({ foo: "bar" }, "keyboard cat"), {});
   });
 
   it("should include tampered strings as false", function() {
     assert.deepEqual(
-      cookieParser.signedCookies(
-        { foo: "s:foobaz.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE" },
-        "keyboard cat"
-      ),
+      cookie.signedCookies({ foo: "s:foobaz.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE" }, "keyboard cat"),
       {
-        foo: false
-      }
+        foo: false,
+      },
     );
   });
 
   it("should include unsigned strings", function() {
     assert.deepEqual(
-      cookieParser.signedCookies(
-        { foo: "s:foobar.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE" },
-        "keyboard cat"
-      ),
+      cookie.signedCookies({ foo: "s:foobar.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE" }, "keyboard cat"),
       {
-        foo: "foobar"
-      }
+        foo: "foobar",
+      },
     );
   });
 
   it("should remove signed strings from original object", function() {
     var obj = {
-      foo: "s:foobar.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE"
+      foo: "s:foobar.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE",
     };
 
-    assert.deepEqual(cookieParser.signedCookies(obj, "keyboard cat"), {
-      foo: "foobar"
+    assert.deepEqual(cookie.signedCookies(obj, "keyboard cat"), {
+      foo: "foobar",
     });
     assert.deepEqual(obj, {});
   });
 
   it("should remove tampered strings from original object", function() {
     var obj = {
-      foo: "s:foobaz.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE"
+      foo: "s:foobaz.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE",
     };
 
-    assert.deepEqual(cookieParser.signedCookies(obj, "keyboard cat"), { foo: false });
+    assert.deepEqual(cookie.signedCookies(obj, "keyboard cat"), { foo: false });
     assert.deepEqual(obj, {});
   });
 
   it("should leave unsigned string in original object", function() {
     var obj = {
       fizz: "buzz",
-      foo: "s:foobar.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE"
+      foo: "s:foobar.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE",
     };
 
-    assert.deepEqual(cookieParser.signedCookies(obj, "keyboard cat"), {
-      foo: "foobar"
+    assert.deepEqual(cookie.signedCookies(obj, "keyboard cat"), {
+      foo: "foobar",
     });
     assert.deepEqual(obj, { fizz: "buzz" });
   });
@@ -332,19 +285,19 @@ describe("cookieParser.signedCookies(obj, secret)", function() {
     it("should include unsigned strings for all secrets", function() {
       var obj = {
         buzz: "s:foobar.N5r0C3M8W+IPpzyAJaIddMWbTGfDSO+bfKlZErJ+MeE",
-        fizz: "s:foobar.JTCAgiMWsnuZpN3mrYnEUjXlGxmDi4POCBnWbRxse88"
+        fizz: "s:foobar.JTCAgiMWsnuZpN3mrYnEUjXlGxmDi4POCBnWbRxse88",
       };
 
-      assert.deepEqual(cookieParser.signedCookies(obj, ["keyboard cat", "nyan cat"]), {
+      assert.deepEqual(cookie.signedCookies(obj, ["keyboard cat", "nyan cat"]), {
         buzz: "foobar",
-        fizz: "foobar"
+        fizz: "foobar",
       });
     });
   });
 });
 
 function createServer(secret) {
-  var _parser = cookieParser(secret);
+  var _parser = cookie.cookieParser(secret);
   return http.createServer(function(req, res) {
     _parser(req, res, function(err) {
       if (err) {

@@ -1,6 +1,5 @@
-// builtin
-var assert = require("assert");
-var cookie = require("../src/lib/cookie");
+const assert = require("assert");
+const cookie = require("../dist/lib");
 
 describe("serialize", function() {
   it("basic", function() {

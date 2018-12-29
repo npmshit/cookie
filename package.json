@@ -1,34 +1,26 @@
 {
-  "name": "cookie",
+  "name": "@modernjs/cookie",
   "description": "HTTP server cookie parsing and serialization",
-  "version": "0.3.1",
-  "author": "Roman Shtylman <shtylman@gmail.com>",
-  "contributors": [
-    "Douglas Christopher Wilson <doug@somethingdoug.com>"
-  ],
+  "version": "1.0.0",
+  "author": "Zongmin Lei <leizongmin@gmail.com>",
   "license": "MIT",
   "keywords": [
     "cookie",
-    "cookies"
+    "cookies",
+    "cookie-parser",
+    "cookie-signature"
   ],
-  "repository": "jshttp/cookie",
-  "devDependencies": {
-    "beautify-benchmark": "0.2.4",
-    "benchmark": "2.1.4",
-    "mocha": "^5.2.0",
-    "nyc": "^13.1.0",
-    "prettier": "^1.15.3",
-    "supertest": "^3.3.0",
-    "typescript": "^3.2.2"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/npmshit/cookie.git"
   },
+  "main": "dist/lib/index.js",
+  "typings": "dist/lib/index.d.ts",
   "files": [
-    "HISTORY.md",
-    "LICENSE",
-    "README.md",
-    "index.js"
+    "dist"
   ],
   "engines": {
-    "node": ">= 0.6"
+    "node": ">= 6.0"
   },
   "scripts": {
     "compile": "rm -rf dist && tsc",
@@ -42,5 +34,17 @@
     "exclude": [
       "**/*.d.ts"
     ]
+  },
+  "peerDependencies": {
+    "@types/node": "^10.12.18"
+  },
+  "devDependencies": {
+    "beautify-benchmark": "0.2.4",
+    "benchmark": "2.1.4",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
+    "prettier": "^1.15.3",
+    "supertest": "^3.3.0",
+    "typescript": "^3.2.2"
   }
 }

@@ -1,9 +1,5 @@
-/**
- * Module dependencies.
- */
-
-var assert = require("assert");
-var cookie = require("../src/lib/cookie-signature");
+const assert = require("assert");
+const cookie = require("../dist/lib");
 
 describe(".sign(val, secret)", function() {
   it("should sign the cookie", function() {
