@@ -15,11 +15,11 @@
   "devDependencies": {
     "beautify-benchmark": "0.2.4",
     "benchmark": "2.1.4",
-    "eslint": "4.19.1",
-    "eslint-plugin-markdown": "1.0.0-beta.6",
-    "istanbul": "0.4.5",
-    "mocha": "1.21.5",
-    "supertest": "^3.3.0"
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
+    "prettier": "^1.15.3",
+    "supertest": "^3.3.0",
+    "typescript": "^3.2.2"
   },
   "files": [
     "HISTORY.md",
@@ -31,15 +31,16 @@
     "node": ">= 0.6"
   },
   "scripts": {
-    "bench": "node benchmark/index.js",
-    "lint": "eslint --plugin markdown --ext js,md .",
-    "test": "mocha --reporter spec --bail --check-leaks test/",
-    "test-ci": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --reporter spec --check-leaks test/",
-    "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- --reporter dot --check-leaks test/"
+    "compile": "rm -rf dist && tsc",
+    "test": "npm run compile && mocha --check-leaks",
+    "test-cov": "rm -rf coverage && nyc --reporter=lcov npm test"
   },
-  "dependencies": {
-    "@types/cookie": "^0.3.2",
-    "@types/cookie-parser": "^1.4.1",
-    "@types/cookie-signature": "^1.0.1"
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "exclude": [
+      "**/*.d.ts"
+    ]
   }
 }
