@@ -249,6 +249,9 @@ export function serialize(name: string, val: string, options: ICookieSerializeOp
       case "strict":
         str += "; SameSite=Strict";
         break;
+      case 'none':
+          str += '; SameSite=None';
+          break;
       default:
         throw new TypeError("option sameSite is invalid");
     }
