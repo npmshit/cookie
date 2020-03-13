@@ -1,7 +1,7 @@
 {
   "name": "@modernjs/cookie",
   "description": "HTTP server cookie parsing and serialization",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Zongmin Lei <leizongmin@gmail.com>",
   "license": "MIT",
   "keywords": [
